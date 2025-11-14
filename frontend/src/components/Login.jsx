@@ -1,24 +1,30 @@
-import React from "react"
+import React, { Suspense } from "react"
 import { useState } from "react"
 import Loader from "./Loader"
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 const api_url = import.meta.env.VITE_API_URL;
 
 export default function Login() {
     const [formData, setFormData] = useState({"email":'', "password":''})
     const [displayError, setError] = useState(null)
-    const [isFormValid, setIsFormValid] = useState(true)
+    const [isFormValid, setIsFormValid] = useState(false)
     const [loading, setLoading] = useState(false)
     const [validationError, setValidationError] = useState({
         "email": null,
         "password": null
     })
+    const navigate = useNavigate()
 
     async function handleSubmit(e) {
+        console.log("submit")
         e.preventDefault()
         setLoading(true)
+        console.log(isFormValid)
+
         try {
             if(isFormValid) {
-                 const response = await fetch(`${api_url}/api/auth/login`, {
+                const response = await fetch(`${api_url}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -38,8 +44,12 @@ export default function Login() {
                 throw new Error ('Les champs sont manquants')
             }
 
+            if(response.status === 200) {
+                navigate('/')
+            }
+
             let responseJSON = await response.json()
-            localStorage.setItem('jwt-token', responseJSON.token)
+                localStorage.setItem('jwt-token', responseJSON.token)
             }
 
             setLoading(false)           
@@ -56,16 +66,16 @@ export default function Login() {
         const targetValue = e.target.value
 
         if(targetName === 'email') {
-
             if(targetValue.length < 10) {
                 setValidationError({
-                    ...validationError, [targetName]:'Email trop petit'
+                    ...validationError, [targetName]:'Email is too short'
                 }); 
                 setIsFormValid(false)
                 return
             }
-             setValidationError({
-                    ...validationError, [targetName]:null
+            setIsFormValid(true)
+            setValidationError({
+                ...validationError, [targetName]:null
             }); 
 
         }
@@ -76,24 +86,30 @@ export default function Login() {
     // console.log(validationError)
 
    return (
-        <div className="signin-container">
-            
-            <form style={{width: '40%'}} onSubmit={(e) => (handleSubmit(e))}>
-                {loading ? <Loader /> : <>
-                <h3>Login</h3>
+        <Suspense fallback={{Loader}}>
+            <div className="signin-container">
+                <Helmet>
+                    <title>Log In</title>
+                    <meta name="description" content="Page de connexion de l'utilisateur" />
+                </Helmet>
+                <form style={{width: '40%'}} onSubmit={(e) => handleSubmit(e)}>
 
-                {displayError ? <p style={{color: 'red', fontSize: '14px'}}>{displayError}</p> : <div></div>}
+                    {loading ? <Loader /> : <>
+                    <h3>Login</h3>
 
-                <label htmlFor="email">Email</label>
-                <input type="email" htmlFor="email" id="email" name="email" onChange={(e) => handleFormChange(e)} />
-                <p style={{color: 'red', fontSize: '12px'}}>{validationError.email ? validationError.email : ''}</p>
-                
-                <label htmlFor="password">Password</label>
-                <input type="password" htmlFor="password" id="password" name="password" onChange={(e) => handleFormChange(e)} />
+                    {displayError ? <p style={{color: 'red', fontSize: '14px'}}>{displayError}</p> : <div></div>}
 
-                <button type="submit" disabled={isFormValid}>Send</button>
-                </>}
-            </form>
-        </div>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" htmlFor="email" id="email" name="email" onChange={(e) => handleFormChange(e)} />
+                    <p style={{color: 'red', fontSize: '12px'}}>{validationError.email ? validationError.email : ''}</p>
+                    
+                    <label htmlFor="password">Password</label>
+                    <input type="password" htmlFor="password" id="password" name="password" onChange={(e) => handleFormChange(e)} />
+
+                    <button type="submit" disabled={!isFormValid} tabIndex="0">Send</button>
+                    </>}
+                </form>
+            </div>
+        </Suspense>
     )
 }

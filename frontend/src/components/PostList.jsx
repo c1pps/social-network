@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
 import Loader from "./Loader";
+import { Suspense } from 'react';
 const api_url = import.meta.env.VITE_API_URL;
 
 export default function PostList() {
@@ -30,8 +31,21 @@ export default function PostList() {
         return <Loader />
     }
     return (
-        <div className="post-card-block">
-            {posts.map(({id, author, image_url, content, likes, comments, author_image_url}) => <Post id={id} author={author} image_url={image_url} content={content} likes={likes} comments={comments} author_image_url={author_image_url} />)}
-        </div>
+        <Suspense fallback={{Loader}}>
+            <div className="post-card-block">
+                {posts.map(({id, author, image_url, content, likes, comments, author_image_url}) => (
+                    <Post 
+                        key={id}
+                        id={id} 
+                        author={author} 
+                        image_url={image_url} 
+                        content={content} 
+                        likes={likes} 
+                        comments={comments} 
+                        author_image_url={author_image_url} 
+                    />
+                ))}
+            </div>
+        </Suspense>
     )
 }

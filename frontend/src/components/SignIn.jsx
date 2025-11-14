@@ -1,5 +1,8 @@
 import React from "react"
 import { useState } from "react"
+import { Helmet } from "react-helmet";
+import Loader from './Loader';  
+import { Suspense } from 'react';
 const api_url = import.meta.env.VITE_API_URL;
 
 export default function SignIn() {
@@ -8,7 +11,7 @@ export default function SignIn() {
     async function handleSubmit(e) {
         e.preventDefault()
         try {
-            const response = await fetch(`${api_url}/auth/register`, {
+            const response = await fetch(`${api_url}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -32,36 +35,42 @@ export default function SignIn() {
     }
 
     return (
-        <div className="signin-container">
-            <form style={{width: '40%'}} onSubmit={(e) => handleSubmit(e)}>
-                <h3>Sign In</h3>
-                
-                <label htmlFor="email">Email</label>
-                <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                onChange={(e) => handleFormChange(e)} 
-                />
-                
-                <label htmlFor="username">Username</label>
-                <input 
-                type="text" 
-                id="username" 
-                name="username" 
-                onChange={(e) => handleFormChange(e)} 
-                />
+        <Suspense fallback={{Loader}}>
+            <div className="signin-container">
+                <Helmet>
+                    <title>Sign In</title>
+                    <meta name="description" content="Page d'inscription de l'utilisateur" />
+                </Helmet>
+                <form style={{width: '40%'}} onSubmit={(e) => handleSubmit(e)}>
+                    <h3>Sign In</h3>
+                    
+                    <label htmlFor="email">Email</label>
+                    <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    onChange={(e) => handleFormChange(e)} 
+                    />
+                    
+                    <label htmlFor="username">Username</label>
+                    <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    onChange={(e) => handleFormChange(e)} 
+                    />
 
-                <label htmlFor="password">Password</label>
-                <input 
-                type="password" 
-                id="password" 
-                name="password" 
-                onChange={(e) => handleFormChange(e)} 
-                />
+                    <label htmlFor="password">Password</label>
+                    <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    onChange={(e) => handleFormChange(e)} 
+                    />
 
-                <button type="submit">Send</button>
-            </form>
-        </div>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </Suspense>
     )
 }

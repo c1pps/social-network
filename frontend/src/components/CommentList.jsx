@@ -1,12 +1,13 @@
-import React from "react";
+import React, { memo } from "react";
 import PostList from "./PostList";
 import Comment from "./Comment";
 
-export default function CommentList({comments}) {
+function CommentList({comments}) {
     return (
         <div className="comments-container">
-            {comments.map(({comment, user, created_at, user_image_url}) => (
+            {comments.map(({comment, user, created_at, user_image_url}, idx) => (
                 <Comment 
+                    key={created_at ?? idx}
                     comment={comment} 
                     user={user} 
                     created_at={created_at} 
@@ -16,3 +17,5 @@ export default function CommentList({comments}) {
         </div>
     )
 }
+
+export default memo(CommentList)

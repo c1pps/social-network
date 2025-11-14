@@ -27,9 +27,7 @@ export function AuthProvider({children}) {
                     const {user} = await response.json()
                     
                     setCurrentUser(user)
-                    setTimeout(() => {
-                     setLoading(false)
-                    }, 1000)
+                    setLoading(false)
                 } catch(error) {
                     console.log(error)
                      setLoading(false)
@@ -39,7 +37,13 @@ export function AuthProvider({children}) {
         validateToken()
     }, [])
 
-    const value = {currentUser, isAuthenticated: currentUser ? true : false, loading}
+    function signOut() {
+        localStorage.removeItem('jwt-token')
+        localStorage.removeItem('username')
+        setCurrentUser(null)
+    }
+
+    const value = {currentUser, isAuthenticated: currentUser ? true : false, loading, signOut}
 
     if(loading) {
         return (

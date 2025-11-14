@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /
+Sitemap: https://social-network-three-sigma.vercel.app/sitemap.xml
