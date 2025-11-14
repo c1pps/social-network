@@ -1,6 +1,7 @@
 import React from "react"
 import { useState } from "react"
 import Loader from "./Loader"
+const api_url = import.meta.env.VITE_API_URL;
 
 export default function Login() {
     const [formData, setFormData] = useState({"email":'', "password":''})
@@ -17,7 +18,7 @@ export default function Login() {
         setLoading(true)
         try {
             if(isFormValid) {
-                 const response = await fetch('http://localhost:3000/api/auth/login', {
+                 const response = await fetch(`${api_url}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

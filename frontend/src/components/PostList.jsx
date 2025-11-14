@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
 import Loader from "./Loader";
+const api_url = import.meta.env.VITE_API_URL;
 
 export default function PostList() {
     const [posts, setPosts] = useState([]);
@@ -9,7 +10,7 @@ export default function PostList() {
     useEffect(() => {
         async function fetchPosts() {
             try {   
-                const response = await fetch('http://localhost:3000/api/posts');
+                const response = await fetch(`${api_url}/api/posts`);
                 if(!response.ok) {
                     throw new Error('failed to fetch')
                 }

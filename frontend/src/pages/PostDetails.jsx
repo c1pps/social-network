@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
+const api_url = import.meta.env.VITE_API_URL;
 
 export default function PostDetails() {
     const [post, setPost] = useState(null);
@@ -9,7 +10,7 @@ export default function PostDetails() {
     useEffect(() => {
     async function fetchPost() {
         try {
-            const response = await fetch(`http://localhost:3000/api/posts/${id}`, {
+            const response = await fetch(`${api_url}/posts/${id}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",

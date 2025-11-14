@@ -2,6 +2,7 @@ import { useState } from "react";
 import PostList from "./PostList";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
+const api_url = import.meta.env.VITE_API_URL;
 
 export default function Post({id, author, image_url, content, likes, comments, author_image_url}) {
     const [likeCount, setLikeCount] = useState(likes)
@@ -11,7 +12,7 @@ export default function Post({id, author, image_url, content, likes, comments, a
     async function handleClickOnLike() {
       const token = localStorage.getItem('jwt-token')
       try {
-        const response = await fetch(`http://localhost:3000/api/posts/${id}/like`, {
+        const response = await fetch(`${api_url}/posts/${id}/like`, {
           method: 'PUT',
           headers: {
             "Content-Type": "application/json",
@@ -31,7 +32,7 @@ export default function Post({id, author, image_url, content, likes, comments, a
     async function createComment(comment) {
       const token = localStorage.getItem('jwt-token')
         try {
-            const response = await fetch(`http://localhost:3000/api/posts/${id}/comments`, {
+            const response = await fetch(`${api_url}/posts/${id}/comments`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

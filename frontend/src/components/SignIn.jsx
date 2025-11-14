@@ -1,5 +1,6 @@
 import React from "react"
 import { useState } from "react"
+const api_url = import.meta.env.VITE_API_URL;
 
 export default function SignIn() {
     const [formData, setFormData] = useState({"username":'', "email":'', "password":''})
@@ -7,7 +8,7 @@ export default function SignIn() {
     async function handleSubmit(e) {
         e.preventDefault()
         try {
-            const response = await fetch('http://localhost:3000/api/auth/register', {
+            const response = await fetch(`${api_url}/auth/register`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
